@@ -23,6 +23,7 @@ namespace GreyScaleHistogrammWPF
         public Histogramm()
         {
             InitializeComponent();
+            DataContext = new HistogrammViewModel();
         }
     }
 }
