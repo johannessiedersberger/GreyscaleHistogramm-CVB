@@ -1,22 +1,20 @@
-﻿using Stemmer.Cvb;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Stemmer.Cvb;
 
-namespace ConsoleApp
+namespace GreyScaleHistogrammWPF
 {
-    class Program
+    public class MainViewModel
     {
-        static void Main(string[] args)
-        {
-            Image image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\pexels-photo-285286.jpeg");
-            List<int> values = new List<int>();
-            CopyPixelsWithValue(image, values);
-        }
+        public int[] ChartValues { get; set; } = CopyPixelsWithValue(null);
 
-        static void CopyPixelsWithValue(Image source, List<int> values)
+        private static int[] CopyPixelsWithValue(Image source)
         {
+            source = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\pexels-photo-285286.jpeg");
+            List<int> values = new List<int>();
             unsafe
             {
                 int width = source.Width;
@@ -28,9 +26,10 @@ namespace ConsoleApp
                 int xInc = (int)linearAccess.XInc;
                 int yInc = (int)linearAccess.YInc;
 
-              
                 for (int y = 0; y < height; y++)
                 {
+                    if (y >= 1)
+                        return values.ToArray();
                     var line = (byte*)basePtr.ToPointer() + y * yInc;
                     for (int x = 0; x < width; x++)
                     {
@@ -39,6 +38,7 @@ namespace ConsoleApp
                     }
                 }
             }
+            return values.ToArray();
         }
     }
 }

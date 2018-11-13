@@ -14,6 +14,7 @@ namespace GreyScaleHistogramm_CVB
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿<Window x:Class="GreyScaleHistogramm_CVB.MainWindow"
+﻿<Window x:Class="GreyScaleHistogrammWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GreyScaleHistogramm_CVB"
+        xmlns:local="clr-namespace:GreyScaleHistogrammWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -15,8 +15,8 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Rectangle Height="100" Width="10" VerticalAlignment="Bottom"
-                       Fill="#eee" Stroke="Gray" Margin="-1.0"/>
+                    <Rectangle Height="{Binding }" Width="Auto" VerticalAlignment="Bottom"
+                       Fill="#eee" Stroke="Gray" Margin="0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
