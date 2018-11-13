@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7070FAA8-AA04-45AC-88ED-0BC55F21FD09}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GreyScaleHistogramm_CVB</RootNamespace>
+    <AssemblyName>GreyScaleHistogramm-CVB</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Stemmer.Cvb, Version=1.30.0.0, Culture=neutral, PublicKeyToken=bff841d173155285, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Async, Version=1.6.0.0, Culture=neutral, PublicKeyToken=0d26dc195f54f13f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Aux, Version=1.2.0.0, Culture=neutral, PublicKeyToken=13b5d4304fbe2d9d, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Aux.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Barcode, Version=1.6.0.0, Culture=neutral, PublicKeyToken=a0742cb87cf557c4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Barcode.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Color, Version=1.0.0.0, Culture=neutral, PublicKeyToken=41b35898bc08d351, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Color.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=37e2b99bd3328f58, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Forms, Version=1.12.0.0, Culture=neutral, PublicKeyToken=47f9e242af4df803, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Foundation, Version=1.14.0.0, Culture=neutral, PublicKeyToken=c9eec56861cb7a6f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Minos, Version=1.16.0.0, Culture=neutral, PublicKeyToken=62c527da284d4ff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Minos.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Movie2, Version=1.8.0.0, Culture=neutral, PublicKeyToken=4096b85e2c8308c4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Movie2.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Polimago, Version=1.16.0.0, Culture=neutral, PublicKeyToken=78455e59ca5a8538, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Polimago.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.SampleDatabase, Version=1.10.0.0, Culture=neutral, PublicKeyToken=f30172487a6a2fc8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.SampleDatabase.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.ShapeFinder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=fe6400df9f0e0609, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.ShapeFinder.dll</HintPath>
+    </Reference>
+    <Reference Include="Stemmer.Cvb.Wpf, Version=1.18.0.0, Culture=neutral, PublicKeyToken=865233c490b278f9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files\STEMMER IMAGING\Common Vision Blox\Lib\Net\Stemmer.Cvb.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
