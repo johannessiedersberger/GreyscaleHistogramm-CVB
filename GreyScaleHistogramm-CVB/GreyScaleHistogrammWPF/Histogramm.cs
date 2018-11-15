@@ -71,7 +71,7 @@ namespace GreyScaleHistogrammWPF
 
       DataProperty = DependencyProperty.Register
       (
-        nameof(Data), typeof(int[]), typeof(Histogramm), 
+        nameof(Data), typeof(int[]), typeof(Histogramm),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender)
       );
     }
@@ -82,19 +82,45 @@ namespace GreyScaleHistogrammWPF
 
       if (Data == null)
         return;
+      #region drawlines with points
+      //var maxSize = RenderSize;
+      //Point lastPoint = new Point(0,MaxHeight);
+
+      //double xMultiplier = maxSize.Width / Data.Length;
+      //double yMultiplier = (maxSize.Height / Data.Max());
+      //for (int i = 0; i < Data.Length; i++)
+      //{
+      //  Point newPoint = new Point(i*xMultiplier, maxSize.Height-Data[i]*yMultiplier);
+      //  drawingContext.DrawLine(ForegroundPen, lastPoint, newPoint);
+      //  lastPoint = newPoint;
+      //}
+      //drawingContext.DrawLine(ForegroundPen, lastPoint, new Point(maxSize.Width-1, maxSize.Height));
+      #endregion
+
+      #region geometries
 
       var maxSize = RenderSize;
-      Point lastPoint = new Point(0,MaxHeight);
+      StreamGeometry geometry = new StreamGeometry();
+      geometry.FillRule = FillRule.EvenOdd;
 
-      double xMultiplier = maxSize.Width / Data.Length;
-      double yMultiplier = (maxSize.Height / Data.Max());
-      for (int i = 0; i < Data.Length; i++)
+      using (StreamGeometryContext context = geometry.Open())
       {
-        Point newPoint = new Point(i*xMultiplier, maxSize.Height-Data[i]*yMultiplier);
-        drawingContext.DrawLine(ForegroundPen, lastPoint, newPoint);
-        lastPoint = newPoint;
+        context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
+
+        double xMultiplier = maxSize.Width / Data.Length;
+        double yMultiplier = (maxSize.Height / Data.Max());
+
+        for (int i = 0; i < Data.Length; i++)
+        {
+          Point point = (new Point(i * xMultiplier, maxSize.Height - Data[i] * yMultiplier));
+          context.LineTo(point, true, true);
+        }
+        context.LineTo(new Point(maxSize.Width, maxSize.Height), isStroked: true, isSmoothJoin: true);
       }
-      drawingContext.DrawLine(ForegroundPen, lastPoint, new Point(maxSize.Width-1, maxSize.Height));
+      geometry.Freeze();
+
+      drawingContext.DrawGeometry(BackgroundBrush, ForegroundPen, geometry);
+      #endregion
     }
   }
 }
