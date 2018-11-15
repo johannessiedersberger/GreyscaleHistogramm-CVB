@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GreyScaleHistogrammWPF"
+        xmlns:MyNamespace="clr-namespace:GreyScaleHistogrammWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <local:Histogramm></local:Histogramm>
-    </Grid>
+  <Window.DataContext>
+    <local:HistogrammViewModel />
+  </Window.DataContext>
+  <Grid>
+    <local:Histogramm Data="{Binding Histogram}" />
+  </Grid>
 </Window>

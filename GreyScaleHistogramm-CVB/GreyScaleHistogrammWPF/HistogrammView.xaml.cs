@@ -15,15 +15,14 @@ using System.Windows.Shapes;
 
 namespace GreyScaleHistogrammWPF
 {
-    /// <summary>
-    /// Interaction logic for Histogramm.xaml
-    /// </summary>
-    public partial class Histogramm : UserControl
+  /// <summary>
+  /// Interaction logic for HistogrammView.xaml
+  /// </summary>
+  public partial class HistogrammView : UserControl
+  {
+    public HistogrammView()
     {
-        public Histogramm()
-        {
-            InitializeComponent();
-            DataContext = new HistogrammViewModel();
-        }
+      InitializeComponent();
     }
+  }
 }
