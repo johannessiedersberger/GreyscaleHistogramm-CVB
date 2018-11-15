@@ -84,14 +84,17 @@ namespace GreyScaleHistogrammWPF
         return;
 
       var maxSize = RenderSize;
-      Point lastPoint = new Point(0,0);
+      Point lastPoint = new Point(0,MaxHeight);
+
+      double xMultiplier = maxSize.Width / Data.Length;
+      double yMultiplier = (maxSize.Height / Data.Max());
       for (int i = 0; i < Data.Length; i++)
       {
-        Point newPoint = new Point(i*maxSize.Width/Data.Length, maxSize.Height-Data[i]*(maxSize.Height/Data.Max()));
+        Point newPoint = new Point(i*xMultiplier, maxSize.Height-Data[i]*yMultiplier);
         drawingContext.DrawLine(ForegroundPen, lastPoint, newPoint);
         lastPoint = newPoint;
       }
-      
+      drawingContext.DrawLine(ForegroundPen, lastPoint, new Point(maxSize.Width-1, maxSize.Height));
     }
   }
 }
