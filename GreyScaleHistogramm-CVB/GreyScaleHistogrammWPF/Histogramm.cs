@@ -50,9 +50,9 @@ namespace GreyScaleHistogrammWPF
 
     #region Data
 
-    public List<int[]> Data
+    public int[][] Data
     {
-      get { return (List<int[]>)GetValue(DataProperty); }
+      get { return (int[][])GetValue(DataProperty); }
       set { SetValue(DataProperty, value); }
     }
 
@@ -67,7 +67,7 @@ namespace GreyScaleHistogrammWPF
 
       DataProperty = DependencyProperty.Register
       (
-        nameof(Data), typeof(List<int[]>), typeof(Histogramm),
+        nameof(Data), typeof(int[][]), typeof(Histogramm),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender)
       );
     }
@@ -79,13 +79,13 @@ namespace GreyScaleHistogrammWPF
       if (Data == null)
         return;
 
-      StreamGeometry[] geometries = new StreamGeometry[Data.Count];
+      StreamGeometry[] geometries = new StreamGeometry[Data.Length];
 
       for (int plane = 0; plane < geometries.Length; plane++)
         geometries[plane] = CreateGeometries(Data[plane]);    
 
       for (int plane = 0; plane < geometries.Length; plane++)   
-        drawingContext.DrawGeometry(GetBrush(Data.Count, plane),ForegroundPen , geometries[plane]);
+        drawingContext.DrawGeometry(GetBrush(Data.Length, plane),ForegroundPen , geometries[plane]);
     }
 
     private StreamGeometry CreateGeometries(int[] histogramData)

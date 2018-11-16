@@ -14,14 +14,14 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-    public List<int[]> Histogram { get; }
+    public int[][] Histogram { get; }
 
-    private static List<int[]> CreateHistogram(Image image)
+    private static int[][] CreateHistogram(Image image)
     {
       Debug.Assert(image != null);
       Debug.Assert(image.Planes[0].DataType == DataTypes.Int8BppUnsigned);
 
-      var histograms = new List<int[]>();
+      var histograms = new int[image.Planes.Count][];
    
       for (int i = 0; i < image.Planes.Count; i++)
       {
@@ -38,7 +38,7 @@ namespace GreyScaleHistogrammWPF
             ++histogram[pixelValue];
           }
         }
-        histograms.Add(histogram);
+        histograms[i] = (histogram);
       }      
       return histograms;
     }
