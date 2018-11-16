@@ -39,8 +39,7 @@ namespace GreyScaleHistogrammWPF
           }
         }
         histograms.Add(histogram);
-      }
-      
+      }      
       return histograms;
     }
   }

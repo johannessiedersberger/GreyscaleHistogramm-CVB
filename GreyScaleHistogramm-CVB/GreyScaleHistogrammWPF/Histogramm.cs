@@ -46,13 +46,9 @@ namespace GreyScaleHistogrammWPF
   /// </summary>
   public class Histogramm : Control
   {
-    private static readonly Pen TransparentPen = new Pen(Brushes.Transparent, 0.0);
-
-   
-
     private static readonly Pen ForegroundPen = new Pen(Brushes.Black, 1.0);
 
-    #region GreyScaleHistogram
+    #region Data
 
     public List<int[]> Data
     {
@@ -83,41 +79,44 @@ namespace GreyScaleHistogrammWPF
       if (Data == null)
         return;
 
-      for (int plane = 0; plane < Data.Count; plane++)
-        DrawGeometries(drawingContext, plane, Data.Count);
+      StreamGeometry[] geometries = new StreamGeometry[Data.Count];
+
+      for (int plane = 0; plane < geometries.Length; plane++)
+        geometries[plane] = CreateGeometries(Data[plane]);    
+
+      for (int plane = 0; plane < geometries.Length; plane++)   
+        drawingContext.DrawGeometry(GetBrush(Data.Count, plane),ForegroundPen , geometries[plane]);
     }
 
-    private void DrawGeometries(DrawingContext drawingContext, int currentPlane, int numberOfPlanes)
+    private StreamGeometry CreateGeometries(int[] histogramData)
     {
-      var maxSize = RenderSize;
       StreamGeometry geometry = new StreamGeometry();
       geometry.FillRule = FillRule.Nonzero;
-
+      var maxSize = RenderSize;
 
       using (StreamGeometryContext context = geometry.Open())
       {
         context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
 
-        double xMultiplier = maxSize.Width / Data[currentPlane].Length;
-        double yMultiplier = (maxSize.Height / Data[currentPlane].Max());
+        double xMultiplier = maxSize.Width / histogramData.Length;
+        double yMultiplier = (maxSize.Height / histogramData.Max());
 
-        for (int i = 0; i < Data[currentPlane].Length; i++)
+        for (int i = 0; i < histogramData.Length; i++)
         {
-          Point point = (new Point(i * xMultiplier, maxSize.Height - Data[currentPlane][i] * yMultiplier));
+          Point point = (new Point(i * xMultiplier, maxSize.Height - histogramData[i] * yMultiplier));
           context.LineTo(point, true, true);
         }
         context.LineTo(new Point(maxSize.Width, maxSize.Height), isStroked: true, isSmoothJoin: true);
         geometry.Freeze();
-
-        drawingContext.DrawGeometry(GetBrush(numberOfPlanes, currentPlane), ForegroundPen, geometry);
       }
+      return geometry;
     }
 
     private Brush GetBrush(int numberOfPlanes, int currentPlane)
     {
-      if (numberOfPlanes == 1)
+      if (numberOfPlanes == 1) //Mono
         return BackgroundBrush[3];
-      if (numberOfPlanes >= 3)
+      if (numberOfPlanes >= 3) //RGB + Alpha
         return BackgroundBrush[currentPlane];
       throw new ArgumentException("No Background Brush selected");
     }
