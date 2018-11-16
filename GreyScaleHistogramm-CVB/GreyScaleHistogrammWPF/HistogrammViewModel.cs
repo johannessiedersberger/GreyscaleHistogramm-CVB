@@ -1,4 +1,5 @@
 ﻿using Stemmer.Cvb;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace GreyScaleHistogrammWPF
@@ -7,34 +8,40 @@ namespace GreyScaleHistogrammWPF
   {
     public HistogrammViewModel()
     {
-      using (var image = Image.FromFile(@"C: \Users\jsiedersberger\Pictures\Saved Pictures\lion.jpg"))
+      using (var image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg"))
       {
         Histogram = CreateHistogram(image);
       }
     }
 
-    public int[] Histogram { get; }
+    public List<int[]> Histogram { get; }
 
-    private static int[] CreateHistogram(Image image)
+    private static List<int[]> CreateHistogram(Image image)
     {
       Debug.Assert(image != null);
       Debug.Assert(image.Planes[0].DataType == DataTypes.Int8BppUnsigned);
 
-      var histogram = new int[byte.MaxValue + 1];
-
-      var access = image.Planes[0].GetLinearAccess<byte>();
-
-      var size = image.Size;
-      for (int y = 0; y < size.Height; y++)
+      var histograms = new List<int[]>();
+   
+      for (int i = 0; i < image.Planes.Count; i++)
       {
-        for (int x = 0; x < size.Width; x++)
-        {
-          var pixelValue = access[x, y];
-          ++histogram[pixelValue];
-        }
-      }
+        var histogram = new int[byte.MaxValue + 1];
 
-      return histogram;
+        var access = image.Planes[i].GetLinearAccess<byte>();     
+        var size = image.Size;
+
+        for (int y = 0; y < size.Height; y++)
+        {
+          for (int x = 0; x < size.Width; x++)
+          {
+            var pixelValue = access[x, y];
+            ++histogram[pixelValue];
+          }
+        }
+        histograms.Add(histogram);
+      }
+      
+      return histograms;
     }
   }
 }

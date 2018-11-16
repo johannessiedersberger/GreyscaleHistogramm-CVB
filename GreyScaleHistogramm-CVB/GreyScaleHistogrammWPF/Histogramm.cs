@@ -48,15 +48,15 @@ namespace GreyScaleHistogrammWPF
   {
     private static readonly Pen TransparentPen = new Pen(Brushes.Transparent, 0.0);
 
-    private static readonly Brush BackgroundBrush = Brushes.Red;
+   
 
     private static readonly Pen ForegroundPen = new Pen(Brushes.Black, 1.0);
 
     #region GreyScaleHistogram
 
-    public int[] Data
+    public List<int[]> Data
     {
-      get { return (int[])GetValue(DataProperty); }
+      get { return (List<int[]>)GetValue(DataProperty); }
       set { SetValue(DataProperty, value); }
     }
 
@@ -71,7 +71,7 @@ namespace GreyScaleHistogrammWPF
 
       DataProperty = DependencyProperty.Register
       (
-        nameof(Data), typeof(int[]), typeof(Histogramm),
+        nameof(Data), typeof(List<int[]>), typeof(Histogramm),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender)
       );
     }
@@ -82,45 +82,51 @@ namespace GreyScaleHistogrammWPF
 
       if (Data == null)
         return;
-      #region drawlines with points
-      //var maxSize = RenderSize;
-      //Point lastPoint = new Point(0,MaxHeight);
 
-      //double xMultiplier = maxSize.Width / Data.Length;
-      //double yMultiplier = (maxSize.Height / Data.Max());
-      //for (int i = 0; i < Data.Length; i++)
-      //{
-      //  Point newPoint = new Point(i*xMultiplier, maxSize.Height-Data[i]*yMultiplier);
-      //  drawingContext.DrawLine(ForegroundPen, lastPoint, newPoint);
-      //  lastPoint = newPoint;
-      //}
-      //drawingContext.DrawLine(ForegroundPen, lastPoint, new Point(maxSize.Width-1, maxSize.Height));
-      #endregion
+      for (int plane = 0; plane < Data.Count; plane++)
+        DrawGeometries(drawingContext, plane, Data.Count);
+    }
 
-      #region geometries
-
+    private void DrawGeometries(DrawingContext drawingContext, int currentPlane, int numberOfPlanes)
+    {
       var maxSize = RenderSize;
       StreamGeometry geometry = new StreamGeometry();
-      geometry.FillRule = FillRule.EvenOdd;
+      geometry.FillRule = FillRule.Nonzero;
+
 
       using (StreamGeometryContext context = geometry.Open())
       {
         context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
 
-        double xMultiplier = maxSize.Width / Data.Length;
-        double yMultiplier = (maxSize.Height / Data.Max());
+        double xMultiplier = maxSize.Width / Data[currentPlane].Length;
+        double yMultiplier = (maxSize.Height / Data[currentPlane].Max());
 
-        for (int i = 0; i < Data.Length; i++)
+        for (int i = 0; i < Data[currentPlane].Length; i++)
         {
-          Point point = (new Point(i * xMultiplier, maxSize.Height - Data[i] * yMultiplier));
+          Point point = (new Point(i * xMultiplier, maxSize.Height - Data[currentPlane][i] * yMultiplier));
           context.LineTo(point, true, true);
         }
         context.LineTo(new Point(maxSize.Width, maxSize.Height), isStroked: true, isSmoothJoin: true);
-      }
-      geometry.Freeze();
+        geometry.Freeze();
 
-      drawingContext.DrawGeometry(BackgroundBrush, ForegroundPen, geometry);
-      #endregion
+        drawingContext.DrawGeometry(GetBrush(numberOfPlanes, currentPlane), ForegroundPen, geometry);
+      }
     }
+
+    private Brush GetBrush(int numberOfPlanes, int currentPlane)
+    {
+      if (numberOfPlanes == 1)
+        return BackgroundBrush[3];
+      if (numberOfPlanes >= 3)
+        return BackgroundBrush[currentPlane];
+      throw new ArgumentException("No Background Brush selected");
+    }
+
+    private static readonly List<Brush> BackgroundBrush = new List<Brush>() {
+      new SolidColorBrush(Color.FromArgb(128,255,0,0)),
+      new SolidColorBrush(Color.FromArgb(128,0,255,0)),
+      new SolidColorBrush(Color.FromArgb(128,0,0,255)),
+      new SolidColorBrush(Color.FromArgb(128,0,0,0)),
+      };
   }
 }
