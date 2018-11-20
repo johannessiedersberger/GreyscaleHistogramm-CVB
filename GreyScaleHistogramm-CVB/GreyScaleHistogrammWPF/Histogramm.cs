@@ -93,7 +93,7 @@ namespace GreyScaleHistogrammWPF
 
     private void UpdateBrushes(int numPlanes)
     {
-      
+
     }
 
     #endregion
@@ -105,18 +105,27 @@ namespace GreyScaleHistogrammWPF
       DrawGeometries(drawingContext);
     }
 
-    private Brush[] Brushes { get; }
+    private Brush[] Brush
+    {
+      get
+      {
+        return new Brush[3]
+        {
+           new SolidColorBrush(Color.FromArgb(128,255,0,0)),//red
+           new SolidColorBrush(Color.FromArgb(128,0,255,0)),//green
+           new SolidColorBrush(Color.FromArgb(128,0,0,255)),//blue
+        };
+      }
+    }
 
     private void DrawGeometries(DrawingContext drawingContext)
     {
-      foreach (var toDraw in _streamGeometries.Zip(Brushes, (geometry, brush) => new { geometry, brush }))
+      UpdateGeometries(Data);
+
+      foreach (var toDraw in _streamGeometries.Zip(Brush, (geometry, brush) => new { geometry, brush }))
       {
         drawingContext.DrawGeometry(toDraw.brush, ForegroundPen, toDraw.geometry);
       }
-
-
-      //for (int plane = 0; plane < _streamGeometries.Length; plane++)
-      //  drawingContext.DrawGeometry(GetBrush(Data.Length, plane), ForegroundPen, _streamGeometries[plane]);
     }
 
     private StreamGeometry[] _streamGeometries;
@@ -144,21 +153,5 @@ namespace GreyScaleHistogrammWPF
       }
       return geometry;
     }
-
-    private Brush GetBrush(int numberOfPlanes, int currentPlane)
-    {
-      if (numberOfPlanes == 1) //Mono
-        return BackgroundBrush[3];
-      if (numberOfPlanes >= 3) //RGB + Alpha
-        return BackgroundBrush[currentPlane];
-      throw new ArgumentException("No Background Brush selected");
-    }
-
-    private static readonly List<Brush> BackgroundBrush = new List<Brush>() {
-      new SolidColorBrush(Color.FromArgb(128,255,0,0)),
-      new SolidColorBrush(Color.FromArgb(128,0,255,0)),
-      new SolidColorBrush(Color.FromArgb(128,0,0,255)),
-      new SolidColorBrush(Color.FromArgb(128,0,0,0)),
-      };
   }
 }
