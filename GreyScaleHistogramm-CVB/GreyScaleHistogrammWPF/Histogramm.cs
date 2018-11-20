@@ -46,9 +46,18 @@ namespace GreyScaleHistogrammWPF
   /// </summary>
   public class Histogramm : Control
   {
-    private static readonly Pen ForegroundPen = new Pen(Brushes.Black, 1.0);
+    public Pen ForegroundPen
+    {
+      get { return (Pen)GetValue(ForegroundPenProperty); }
+      set { SetValue(ForegroundPenProperty, value); }
+    }
+
+    public static readonly DependencyProperty ForegroundPenProperty;
+
+
     private static readonly Brush[] DefaultBrushes;
 
+    private static readonly Pen DefaultPen;
     static Histogramm()
     {
       DefaultStyleKeyProperty.OverrideMetadata(typeof(Histogramm), new FrameworkPropertyMetadata(typeof(Histogramm)));
@@ -61,6 +70,8 @@ namespace GreyScaleHistogrammWPF
         new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),//black
       };
 
+      DefaultPen = new Pen(Brushes.Black, 1.0);
+
       DataProperty = DependencyProperty.Register
       (
         nameof(Data), typeof(int[][]), typeof(Histogramm),
@@ -68,10 +79,16 @@ namespace GreyScaleHistogrammWPF
       );
 
       BrushProperty = DependencyProperty.Register
-        (
+      (
           nameof(Brush), typeof(Brush[]), typeof(Histogramm),
           new FrameworkPropertyMetadata(DefaultBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
-        );
+      );
+
+      ForegroundPenProperty = DependencyProperty.Register
+      (
+          nameof(ForegroundPen), typeof(Pen), typeof(Histogramm),
+          new FrameworkPropertyMetadata(DefaultPen, FrameworkPropertyMetadataOptions.AffectsRender)
+      );
     }
 
     protected override Size ArrangeOverride(Size arrangeBounds)
@@ -134,30 +151,6 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-    private void UpdateBrushes(int brushes)
-    {
-    }
-
-    #endregion
-
-    protected override void OnRender(DrawingContext drawingContext)
-    {
-      base.OnRender(drawingContext);
-
-      DrawGeometries(drawingContext);
-    }
-
-    private void DrawGeometries(DrawingContext drawingContext)
-    {
-      if (_streamGeometries == null)
-        return;
-
-      foreach (var toDraw in _streamGeometries.Zip(Brush, (geometry, brush) => new { geometry, brush }))
-      {
-        drawingContext.DrawGeometry(toDraw.brush, ForegroundPen, toDraw.geometry);
-      }
-    }
-
     private StreamGeometry[] _streamGeometries;
 
     private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
@@ -182,5 +175,33 @@ namespace GreyScaleHistogrammWPF
       }
       return geometry;
     }
+
+    private void UpdateBrushes(int brushes)
+    {
+    }
+
+    #endregion
+
+    protected override void OnRender(DrawingContext drawingContext)
+    {
+      base.OnRender(drawingContext);
+
+      DrawGeometries(drawingContext);
+    }
+
+    private void DrawGeometries(DrawingContext drawingContext)
+    {
+      if (_streamGeometries == null)
+        return;
+
+      foreach (var toDraw in _streamGeometries.Zip(Brush, (geometry, brush) => new { geometry, brush }))
+      {
+        drawingContext.DrawGeometry(toDraw.brush, ForegroundPen, toDraw.geometry);
+      }
+    }
+
+
+
+
   }
 }
