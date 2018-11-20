@@ -57,7 +57,39 @@ namespace GreyScaleHistogrammWPF
         nameof(Data), typeof(int[][]), typeof(Histogramm),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Histogram_Changed))
       );
+
+      BrushProperty = DependencyProperty.Register
+        (
+          nameof(Brush), typeof(Brush[]), typeof(Histogramm),
+          new FrameworkPropertyMetadata(_defaultBrush, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
+        );
     }
+
+    private static readonly Brush[] _defaultBrush = new Brush[]
+    {
+      new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)),//red
+      new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)),//green
+      new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)),//blue
+      new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),//black
+    };
+
+    #region brush
+    public Brush[] Brush
+    {
+      get { return (Brush[])GetValue(BrushProperty); }
+      set { SetValue(BrushProperty, value); }
+    }
+    public static readonly DependencyProperty BrushProperty;
+
+    private static void Brush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+      if (d is Histogramm histogramm)
+      {
+        var newValue = e.NewValue as Brush[];
+        histogramm.UpdateBrushes(newValue.Length);
+      }
+    }
+    #endregion
 
     #region Data
 
@@ -91,9 +123,8 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-    private void UpdateBrushes(int numPlanes)
-    {
-
+    private void UpdateBrushes(int brushes)
+    {        
     }
 
     #endregion
@@ -103,19 +134,6 @@ namespace GreyScaleHistogrammWPF
       base.OnRender(drawingContext);
 
       DrawGeometries(drawingContext);
-    }
-
-    private Brush[] Brush
-    {
-      get
-      {
-        return new Brush[3]
-        {
-           new SolidColorBrush(Color.FromArgb(128,255,0,0)),//red
-           new SolidColorBrush(Color.FromArgb(128,0,255,0)),//green
-           new SolidColorBrush(Color.FromArgb(128,0,0,255)),//blue
-        };
-      }
     }
 
     private void DrawGeometries(DrawingContext drawingContext)
