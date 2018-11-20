@@ -47,31 +47,42 @@ namespace GreyScaleHistogrammWPF
   public class Histogramm : Control
   {
     private static readonly Pen ForegroundPen = new Pen(Brushes.Black, 1.0);
+    private static readonly Brush[] DefaultBrushes;
 
     static Histogramm()
     {
       DefaultStyleKeyProperty.OverrideMetadata(typeof(Histogramm), new FrameworkPropertyMetadata(typeof(Histogramm)));
 
+      DefaultBrushes = new Brush[]
+      {
+        new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)),//red
+        new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)),//green
+        new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)),//blue
+        new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),//black
+      };
+
       DataProperty = DependencyProperty.Register
       (
         nameof(Data), typeof(int[][]), typeof(Histogramm),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Histogram_Changed))
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Data_Changed))
       );
 
       BrushProperty = DependencyProperty.Register
         (
           nameof(Brush), typeof(Brush[]), typeof(Histogramm),
-          new FrameworkPropertyMetadata(_defaultBrush, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
+          new FrameworkPropertyMetadata(DefaultBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
         );
     }
 
-    private static readonly Brush[] _defaultBrush = new Brush[]
+    protected override Size ArrangeOverride(Size arrangeBounds)
     {
-      new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)),//red
-      new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)),//green
-      new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)),//blue
-      new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),//black
-    };
+      var newSize = base.ArrangeOverride(arrangeBounds);
+
+      UpdateGeometries(Data, newSize);
+
+      return newSize;
+    }
+
 
     #region brush
     public Brush[] Brush
@@ -100,21 +111,21 @@ namespace GreyScaleHistogrammWPF
     }
     public static readonly DependencyProperty DataProperty;
 
-    private static void Histogram_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void Data_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       if (d is Histogramm histogramm)
       {
         var newValue = e.NewValue as int[][];
-        histogramm.UpdateGeometries(newValue);
+        histogramm.UpdateGeometries(newValue, histogramm.RenderSize);
         histogramm.UpdateBrushes(newValue?.Length ?? 0);
       }
     }
 
-    private void UpdateGeometries(int[][] data)
+    private void UpdateGeometries(int[][] data, Size size)
     {
       if (data != null)
       {
-        _streamGeometries = data.Select(plane => CreateGeometry(plane))
+        _streamGeometries = data.Select(plane => CreateGeometry(plane, size))
                                 .ToArray();
       }
       else
@@ -124,7 +135,7 @@ namespace GreyScaleHistogrammWPF
     }
 
     private void UpdateBrushes(int brushes)
-    {        
+    {
     }
 
     #endregion
@@ -138,7 +149,8 @@ namespace GreyScaleHistogrammWPF
 
     private void DrawGeometries(DrawingContext drawingContext)
     {
-      UpdateGeometries(Data);
+      if (_streamGeometries == null)
+        return;
 
       foreach (var toDraw in _streamGeometries.Zip(Brush, (geometry, brush) => new { geometry, brush }))
       {
@@ -148,11 +160,10 @@ namespace GreyScaleHistogrammWPF
 
     private StreamGeometry[] _streamGeometries;
 
-    private StreamGeometry CreateGeometry(int[] histogramData)
+    private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
     {
       StreamGeometry geometry = new StreamGeometry();
       geometry.FillRule = FillRule.Nonzero;
-      var maxSize = RenderSize;
 
       using (StreamGeometryContext context = geometry.Open())
       {
