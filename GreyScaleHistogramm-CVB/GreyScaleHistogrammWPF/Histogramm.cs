@@ -48,19 +48,6 @@ namespace GreyScaleHistogrammWPF
   {
     private static readonly Pen ForegroundPen = new Pen(Brushes.Black, 1.0);
 
-    #region Data
-
-    public int[][] Data
-    {
-      get { return (int[][])GetValue(DataProperty); }
-      set { SetValue(DataProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for GreyScaleHistogramm.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty DataProperty;
-
-    #endregion
-
     static Histogramm()
     {
       DefaultStyleKeyProperty.OverrideMetadata(typeof(Histogramm), new FrameworkPropertyMetadata(typeof(Histogramm)));
@@ -68,27 +55,73 @@ namespace GreyScaleHistogrammWPF
       DataProperty = DependencyProperty.Register
       (
         nameof(Data), typeof(int[][]), typeof(Histogramm),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender)
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Histogram_Changed))
       );
     }
+
+    #region Data
+
+    public int[][] Data
+    {
+      get { return (int[][])GetValue(DataProperty); }
+      set { SetValue(DataProperty, value); }
+    }
+    public static readonly DependencyProperty DataProperty;
+
+    private static void Histogram_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+      if (d is Histogramm histogramm)
+      {
+        var newValue = e.NewValue as int[][];
+        histogramm.UpdateGeometries(newValue);
+        histogramm.UpdateBrushes(newValue?.Length ?? 0);
+      }
+    }
+
+    private void UpdateGeometries(int[][] data)
+    {
+      if (data != null)
+      {
+        _streamGeometries = data.Select(plane => CreateGeometry(plane))
+                                .ToArray();
+      }
+      else
+      {
+        _streamGeometries = null;
+      }
+    }
+
+    private void UpdateBrushes(int numPlanes)
+    {
+      
+    }
+
+    #endregion
 
     protected override void OnRender(DrawingContext drawingContext)
     {
       base.OnRender(drawingContext);
 
-      if (Data == null)
-        return;
-
-      StreamGeometry[] geometries = new StreamGeometry[Data.Length];
-
-      for (int plane = 0; plane < geometries.Length; plane++)
-        geometries[plane] = CreateGeometries(Data[plane]);    
-
-      for (int plane = 0; plane < geometries.Length; plane++)   
-        drawingContext.DrawGeometry(GetBrush(Data.Length, plane),ForegroundPen , geometries[plane]);
+      DrawGeometries(drawingContext);
     }
 
-    private StreamGeometry CreateGeometries(int[] histogramData)
+    private Brush[] Brushes { get; }
+
+    private void DrawGeometries(DrawingContext drawingContext)
+    {
+      foreach (var toDraw in _streamGeometries.Zip(Brushes, (geometry, brush) => new { geometry, brush }))
+      {
+        drawingContext.DrawGeometry(toDraw.brush, ForegroundPen, toDraw.geometry);
+      }
+
+
+      //for (int plane = 0; plane < _streamGeometries.Length; plane++)
+      //  drawingContext.DrawGeometry(GetBrush(Data.Length, plane), ForegroundPen, _streamGeometries[plane]);
+    }
+
+    private StreamGeometry[] _streamGeometries;
+
+    private StreamGeometry CreateGeometry(int[] histogramData)
     {
       StreamGeometry geometry = new StreamGeometry();
       geometry.FillRule = FillRule.Nonzero;
