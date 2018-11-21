@@ -75,10 +75,6 @@ namespace GreyScaleHistogrammWPF
       );
     }
 
-   
-
-   
-
     #region brush
     /// <summary>
     /// The Colors that are used to display the different histograms
@@ -255,7 +251,6 @@ namespace GreyScaleHistogrammWPF
     }
    
     private StreamGeometry[] _streamGeometries;
-
-   
+  
   }
 }

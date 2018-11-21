@@ -14,9 +14,18 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
+    /// <summary>
+    /// Contains how often a color value appeard in the image
+    /// </summary>
     public int[][] Histogram { get; }
 
-    private static int[][] CreateHistogram(Image image)
+    /// <summary>
+    /// Creates an array of how often a color appeared
+    /// in each plane of the image
+    /// </summary>
+    /// <param name="image"></param>
+    /// <returns></returns>
+    public static int[][] CreateHistogram(Image image)
     {
       Debug.Assert(image != null);
       Debug.Assert(image.Planes[0].DataType == DataTypes.Int8BppUnsigned);
