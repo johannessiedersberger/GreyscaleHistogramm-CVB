@@ -8,7 +8,7 @@ namespace GreyScaleHistogrammWPF
   {
     public HistogrammViewModel()
     {
-      using (var image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg"))
+      using (var image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\field.png"))
       {
         Histogram = CreateHistogram(image);
       }

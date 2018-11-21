@@ -46,32 +46,30 @@ namespace GreyScaleHistogrammWPF
   /// </summary>
   public class Histogramm : Control
   {
-    public Pen ForegroundPen
-    {
-      get { return (Pen)GetValue(ForegroundPenProperty); }
-      set { SetValue(ForegroundPenProperty, value); }
-    }
+    private static readonly Brush[] DefaultMultiPlaneBrushes;
 
-    public static readonly DependencyProperty ForegroundPenProperty;
-
-
-    private static readonly Brush[] DefaultBrushes;
+    private static readonly Brush[] DefaultMonoPlaneBrushes;
 
     private static readonly Pen DefaultPen;
+
     static Histogramm()
     {
       DefaultStyleKeyProperty.OverrideMetadata(typeof(Histogramm), new FrameworkPropertyMetadata(typeof(Histogramm)));
 
-      DefaultBrushes = new Brush[]
+      DefaultMultiPlaneBrushes = new Brush[]
       {
         new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)),//red
         new SolidColorBrush(Color.FromArgb(128, 0, 255, 0)),//green
         new SolidColorBrush(Color.FromArgb(128, 0, 0, 255)),//blue
-        new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),//black
+      };
+
+      DefaultMonoPlaneBrushes = new Brush[]
+      {
+        new SolidColorBrush(Color.FromArgb(128, 0, 0, 0))//black
       };
 
       DefaultPen = new Pen(Brushes.Black, 1.0);
-
+      //Propdp
       DataProperty = DependencyProperty.Register
       (
         nameof(Data), typeof(int[][]), typeof(Histogramm),
@@ -80,14 +78,26 @@ namespace GreyScaleHistogrammWPF
 
       BrushProperty = DependencyProperty.Register
       (
-          nameof(Brush), typeof(Brush[]), typeof(Histogramm),
-          new FrameworkPropertyMetadata(DefaultBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
+        nameof(Brush), typeof(Brush[]), typeof(Histogramm),
+        new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
 
       ForegroundPenProperty = DependencyProperty.Register
       (
-          nameof(ForegroundPen), typeof(Pen), typeof(Histogramm),
-          new FrameworkPropertyMetadata(DefaultPen, FrameworkPropertyMetadataOptions.AffectsRender)
+        nameof(ForegroundPen), typeof(Pen), typeof(Histogramm),
+        new FrameworkPropertyMetadata(DefaultPen, FrameworkPropertyMetadataOptions.AffectsRender)
+      );
+
+      MonoPlaneBrushesProperty = DependencyProperty.Register
+      (
+        nameof(MonoPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
+        new FrameworkPropertyMetadata(DefaultMonoPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender)
+      );
+
+      MultiPlaneBrushesProperty = DependencyProperty.Register
+      (
+        nameof(MultiPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
+        new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender)
       );
     }
 
@@ -100,6 +110,19 @@ namespace GreyScaleHistogrammWPF
       return newSize;
     }
 
+    public Brush[] MonoPlaneBrushes
+    {
+      get { return (Brush[])GetValue(MonoPlaneBrushesProperty); }
+      set { SetValue(MonoPlaneBrushesProperty, value); }
+    }
+    public static readonly DependencyProperty MonoPlaneBrushesProperty;
+
+    public Brush[] MultiPlaneBrushes
+    {
+      get { return (Brush[])GetValue(MultiPlaneBrushesProperty); }
+      set { SetValue(MultiPlaneBrushesProperty, value); }
+    }
+    public static readonly DependencyProperty MultiPlaneBrushesProperty;
 
     #region brush
     public Brush[] Brush
@@ -117,6 +140,15 @@ namespace GreyScaleHistogrammWPF
         histogramm.UpdateBrushes(newValue.Length);
       }
     }
+    #endregion
+
+    #region pen
+    public Pen ForegroundPen
+    {
+      get { return (Pen)GetValue(ForegroundPenProperty); }
+      set { SetValue(ForegroundPenProperty, value); }
+    }
+    public static readonly DependencyProperty ForegroundPenProperty;
     #endregion
 
     #region Data
@@ -151,6 +183,18 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
+    private void UpdateBrushes(int planes)
+    {
+      if (planes == 1)
+      {
+        Brush = MonoPlaneBrushes;
+      }
+      else if(planes > 1)
+      {
+        Brush = MultiPlaneBrushes;
+      }
+    }
+
     private StreamGeometry[] _streamGeometries;
 
     private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
@@ -176,9 +220,7 @@ namespace GreyScaleHistogrammWPF
       return geometry;
     }
 
-    private void UpdateBrushes(int brushes)
-    {
-    }
+
 
     #endregion
 
