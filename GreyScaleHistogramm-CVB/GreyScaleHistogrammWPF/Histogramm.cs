@@ -16,33 +16,7 @@ using System.Windows.Shapes;
 namespace GreyScaleHistogrammWPF
 {
   /// <summary>
-  /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-  ///
-  /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-  /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-  /// to be used:
-  ///
-  ///     xmlns:MyNamespace="clr-namespace:GreyScaleHistogrammWPF"
-  ///
-  ///
-  /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-  /// Add this XmlNamespace attribute to the root element of the markup file where it is 
-  /// to be used:
-  ///
-  ///     xmlns:MyNamespace="clr-namespace:GreyScaleHistogrammWPF;assembly=GreyScaleHistogrammWPF"
-  ///
-  /// You will also need to add a project reference from the project where the XAML file lives
-  /// to this project and Rebuild to avoid compilation errors:
-  ///
-  ///     Right click on the target project in the Solution Explorer and
-  ///     "Add Reference"->"Projects"->[Browse to and select this project]
-  ///
-  ///
-  /// Step 2)
-  /// Go ahead and use your control in the XAML file.
-  ///
-  ///     <MyNamespace:Histogramm/>
-  ///
+  /// Control for the Histogramm of a MonoPlane or Multiplane Image
   /// </summary>
   public class Histogramm : Control
   {
@@ -69,7 +43,7 @@ namespace GreyScaleHistogrammWPF
       };
 
       DefaultPen = new Pen(Brushes.Black, 1.0);
-      //Propdp
+ 
       DataProperty = DependencyProperty.Register
       (
         nameof(Data), typeof(int[][]), typeof(Histogramm),
@@ -101,36 +75,20 @@ namespace GreyScaleHistogrammWPF
       );
     }
 
-    protected override Size ArrangeOverride(Size arrangeBounds)
-    {
-      var newSize = base.ArrangeOverride(arrangeBounds);
+   
 
-      UpdateGeometries(Data, newSize);
-
-      return newSize;
-    }
-
-    public Brush[] MonoPlaneBrushes
-    {
-      get { return (Brush[])GetValue(MonoPlaneBrushesProperty); }
-      set { SetValue(MonoPlaneBrushesProperty, value); }
-    }
-    public static readonly DependencyProperty MonoPlaneBrushesProperty;
-
-    public Brush[] MultiPlaneBrushes
-    {
-      get { return (Brush[])GetValue(MultiPlaneBrushesProperty); }
-      set { SetValue(MultiPlaneBrushesProperty, value); }
-    }
-    public static readonly DependencyProperty MultiPlaneBrushesProperty;
+   
 
     #region brush
-    public Brush[] Brush
+    /// <summary>
+    /// The Colors that are used to display the different histograms
+    /// </summary>
+    private Brush[] Brush
     {
       get { return (Brush[])GetValue(BrushProperty); }
       set { SetValue(BrushProperty, value); }
     }
-    public static readonly DependencyProperty BrushProperty;
+    private static readonly DependencyProperty BrushProperty;
 
     private static void Brush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -140,25 +98,52 @@ namespace GreyScaleHistogrammWPF
         histogramm.UpdateBrushes();
       }
     }
+
+    /// <summary>
+    /// The Color that is used to display a MonoPlane Histogramm
+    /// </summary>
+    public Brush[] MonoPlaneBrushes
+    {
+      get { return (Brush[])GetValue(MonoPlaneBrushesProperty); }
+      set { SetValue(MonoPlaneBrushesProperty, value); }
+    }
+    private static readonly DependencyProperty MonoPlaneBrushesProperty;
+
+    /// <summary>
+    /// The Colors that are used to display a MultiPlane Histogramm
+    /// </summary>
+    public Brush[] MultiPlaneBrushes
+    {
+      get { return (Brush[])GetValue(MultiPlaneBrushesProperty); }
+      set { SetValue(MultiPlaneBrushesProperty, value); }
+    }
+    private static readonly DependencyProperty MultiPlaneBrushesProperty;
     #endregion
 
     #region pen
+    /// <summary>
+    /// The pen that is used to draw the histogramm
+    /// </summary>
     public Pen ForegroundPen
     {
       get { return (Pen)GetValue(ForegroundPenProperty); }
       set { SetValue(ForegroundPenProperty, value); }
     }
-    public static readonly DependencyProperty ForegroundPenProperty;
+    private static readonly DependencyProperty ForegroundPenProperty;
     #endregion
 
     #region Data
 
+    /// <summary>
+    /// the number of times each color value has been used
+    /// in the picture
+    /// </summary>
     public int[][] Data
     {
       get { return (int[][])GetValue(DataProperty); }
       set { SetValue(DataProperty, value); }
     }
-    public static readonly DependencyProperty DataProperty;
+    private static readonly DependencyProperty DataProperty;
 
     private static void Data_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -169,6 +154,9 @@ namespace GreyScaleHistogrammWPF
         histogramm.UpdateBrushes();
       }
     }
+    #endregion
+
+    #region updateHistogram
 
     private void UpdateGeometries(int[][] data, Size size)
     {
@@ -181,6 +169,29 @@ namespace GreyScaleHistogrammWPF
       {
         _streamGeometries = null;
       }
+    }
+
+    private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
+    {
+      StreamGeometry geometry = new StreamGeometry();
+      geometry.FillRule = FillRule.Nonzero;
+
+      using (StreamGeometryContext context = geometry.Open())
+      {
+        context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
+
+        double xMultiplier = maxSize.Width / histogramData.Length;
+        double yMultiplier = (maxSize.Height / histogramData.Max());
+
+        for (int i = 0; i < histogramData.Length; i++)
+        {
+          Point point = (new Point(i * xMultiplier, maxSize.Height - histogramData[i] * yMultiplier));
+          context.LineTo(point, true, true);
+        }
+        context.LineTo(new Point(maxSize.Width, maxSize.Height), isStroked: true, isSmoothJoin: true);
+        geometry.Freeze();
+      }
+      return geometry;
     }
 
     private void UpdateBrushes()
@@ -214,34 +225,16 @@ namespace GreyScaleHistogrammWPF
 
     private static readonly Brush DefaultBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
 
-    private StreamGeometry[] _streamGeometries;
-
-    private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
-    {
-      StreamGeometry geometry = new StreamGeometry();
-      geometry.FillRule = FillRule.Nonzero;
-
-      using (StreamGeometryContext context = geometry.Open())
-      {
-        context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
-
-        double xMultiplier = maxSize.Width / histogramData.Length;
-        double yMultiplier = (maxSize.Height / histogramData.Max());
-
-        for (int i = 0; i < histogramData.Length; i++)
-        {
-          Point point = (new Point(i * xMultiplier, maxSize.Height - histogramData[i] * yMultiplier));
-          context.LineTo(point, true, true);
-        }
-        context.LineTo(new Point(maxSize.Width, maxSize.Height), isStroked: true, isSmoothJoin: true);
-        geometry.Freeze();
-      }
-      return geometry;
-    }
-
-
-
     #endregion
+
+    protected override Size ArrangeOverride(Size arrangeBounds)
+    {
+      var newSize = base.ArrangeOverride(arrangeBounds);
+
+      UpdateGeometries(Data, newSize);
+
+      return newSize;
+    }
 
     protected override void OnRender(DrawingContext drawingContext)
     {
@@ -260,13 +253,9 @@ namespace GreyScaleHistogrammWPF
         drawingContext.DrawGeometry(toDraw.brush, ForegroundPen, toDraw.geometry);
       }
     }
+   
+    private StreamGeometry[] _streamGeometries;
 
-    protected override void OnMouseDown(MouseButtonEventArgs e)
-    {
-      base.OnMouseDown(e);
-      MonoPlaneBrushes = new Brush[] { new SolidColorBrush(Color.FromArgb(128, 255, 255, 100)) };
-    }
-
-
+   
   }
 }
