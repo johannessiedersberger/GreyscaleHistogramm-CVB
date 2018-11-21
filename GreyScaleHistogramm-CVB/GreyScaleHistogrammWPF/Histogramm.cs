@@ -91,13 +91,13 @@ namespace GreyScaleHistogrammWPF
       MonoPlaneBrushesProperty = DependencyProperty.Register
       (
         nameof(MonoPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
-        new FrameworkPropertyMetadata(DefaultMonoPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender)
+        new FrameworkPropertyMetadata(DefaultMonoPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
 
       MultiPlaneBrushesProperty = DependencyProperty.Register
       (
         nameof(MultiPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
-        new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender)
+        new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
     }
 
@@ -137,7 +137,7 @@ namespace GreyScaleHistogrammWPF
       if (d is Histogramm histogramm)
       {
         var newValue = e.NewValue as Brush[];
-        histogramm.UpdateBrushes(newValue.Length);
+        histogramm.UpdateBrushes();
       }
     }
     #endregion
@@ -166,7 +166,7 @@ namespace GreyScaleHistogrammWPF
       {
         var newValue = e.NewValue as int[][];
         histogramm.UpdateGeometries(newValue, histogramm.RenderSize);
-        histogramm.UpdateBrushes(newValue?.Length ?? 0);
+        histogramm.UpdateBrushes();
       }
     }
 
@@ -183,17 +183,36 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-    private void UpdateBrushes(int planes)
+    private void UpdateBrushes()
     {
-      if (planes == 1)
+      if (Data.Length == 1)
       {
+        if (MonoPlaneBrushes.Length < Data.Length)
+          MonoPlaneBrushes = FillBrushesUp(MonoPlaneBrushes, Data.Length);
+
         Brush = MonoPlaneBrushes;
       }
-      else if(planes > 1)
+      else if (Data.Length > 1)
       {
+        if (MultiPlaneBrushes.Length < Data.Length)
+          MultiPlaneBrushes = FillBrushesUp(MultiPlaneBrushes, Data.Length);
+
         Brush = MultiPlaneBrushes;
       }
     }
+
+    private Brush[] FillBrushesUp(Brush[] brush, int planes)
+    {
+      int missingBrushes = planes - brush.Length;
+      List<Brush> brushesList = brush.ToList();
+      for (int i = 0; i < missingBrushes; i++)
+      {
+        brushesList.Add(DefaultBrush);
+      }
+      return brushesList.ToArray();
+    }
+
+    private static readonly Brush DefaultBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0));
 
     private StreamGeometry[] _streamGeometries;
 
@@ -242,7 +261,11 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-
+    protected override void OnMouseDown(MouseButtonEventArgs e)
+    {
+      base.OnMouseDown(e);
+      MonoPlaneBrushes = new Brush[] { new SolidColorBrush(Color.FromArgb(128, 255, 255, 100)) };
+    }
 
 
   }
