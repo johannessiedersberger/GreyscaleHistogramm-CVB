@@ -18,7 +18,7 @@ namespace GreyScaleHistogrammWPF
   /// <summary>
   /// Control for the Histogramm of a MonoPlane or Multiplane Image
   /// </summary>
-  public class Histogramm : Control
+  public class HistogrammControl : Control
   {
     private static readonly Brush[] DefaultMultiPlaneBrushes;
 
@@ -26,9 +26,9 @@ namespace GreyScaleHistogrammWPF
 
     private static readonly Pen DefaultPen;
 
-    static Histogramm()
+    static HistogrammControl()
     {
-      DefaultStyleKeyProperty.OverrideMetadata(typeof(Histogramm), new FrameworkPropertyMetadata(typeof(Histogramm)));
+      DefaultStyleKeyProperty.OverrideMetadata(typeof(HistogrammControl), new FrameworkPropertyMetadata(typeof(HistogrammControl)));
 
       DefaultMultiPlaneBrushes = new Brush[]
       {
@@ -46,31 +46,31 @@ namespace GreyScaleHistogrammWPF
  
       DataProperty = DependencyProperty.Register
       (
-        nameof(Data), typeof(int[][]), typeof(Histogramm),
+        nameof(Data), typeof(int[][]), typeof(HistogrammControl),
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Data_Changed))
       );
 
       BrushProperty = DependencyProperty.Register
       (
-        nameof(Brush), typeof(Brush[]), typeof(Histogramm),
+        nameof(Brush), typeof(Brush[]), typeof(HistogrammControl),
         new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
 
       ForegroundPenProperty = DependencyProperty.Register
       (
-        nameof(ForegroundPen), typeof(Pen), typeof(Histogramm),
+        nameof(ForegroundPen), typeof(Pen), typeof(HistogrammControl),
         new FrameworkPropertyMetadata(DefaultPen, FrameworkPropertyMetadataOptions.AffectsRender)
       );
 
       MonoPlaneBrushesProperty = DependencyProperty.Register
       (
-        nameof(MonoPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
+        nameof(MonoPlaneBrushes), typeof(Brush[]), typeof(HistogrammControl),
         new FrameworkPropertyMetadata(DefaultMonoPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
 
       MultiPlaneBrushesProperty = DependencyProperty.Register
       (
-        nameof(MultiPlaneBrushes), typeof(Brush[]), typeof(Histogramm),
+        nameof(MultiPlaneBrushes), typeof(Brush[]), typeof(HistogrammControl),
         new FrameworkPropertyMetadata(DefaultMultiPlaneBrushes, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(Brush_Changed))
       );
     }
@@ -88,7 +88,7 @@ namespace GreyScaleHistogrammWPF
 
     private static void Brush_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      if (d is Histogramm histogramm)
+      if (d is HistogrammControl histogramm)
       {
         var newValue = e.NewValue as Brush[];
         histogramm.UpdateBrushes();
@@ -143,7 +143,7 @@ namespace GreyScaleHistogrammWPF
 
     private static void Data_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      if (d is Histogramm histogramm)
+      if (d is HistogrammControl histogramm)
       {
         var newValue = e.NewValue as int[][];
         histogramm.UpdateGeometries(newValue, histogramm.RenderSize);

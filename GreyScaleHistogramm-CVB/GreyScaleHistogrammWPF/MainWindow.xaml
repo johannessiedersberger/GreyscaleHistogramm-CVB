@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
   <Window.DataContext>
-    <local:HistogrammViewModel />
+    <local:MainViewModel/>
   </Window.DataContext>
   <Grid>
-    <local:Histogramm Data="{Binding Histogram}" />
+    <local:HistogrammControl Data="{Binding Data}"/>
   </Grid>
 </Window>

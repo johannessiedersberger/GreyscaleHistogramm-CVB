@@ -73,7 +73,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Histogramm.cs" />
+    <Compile Include="Histogram.cs" />
+    <Compile Include="HistogrammControl.cs" />
     <Compile Include="HistogrammView.xaml.cs">
       <DependentUpon>HistogrammView.xaml</DependentUpon>
     </Compile>

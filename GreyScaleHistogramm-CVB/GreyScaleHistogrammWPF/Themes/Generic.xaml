@@ -4,10 +4,10 @@
     xmlns:local="clr-namespace:GreyScaleHistogrammWPF">
 
 
-    <Style TargetType="{x:Type local:Histogramm}">
+    <Style TargetType="{x:Type local:HistogrammControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:Histogramm}">
+                <ControlTemplate TargetType="{x:Type local:HistogrammControl}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">

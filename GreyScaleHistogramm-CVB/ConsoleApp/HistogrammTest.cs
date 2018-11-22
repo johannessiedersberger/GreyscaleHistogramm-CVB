@@ -12,32 +12,28 @@ namespace ConsoleApp
   public class HistogrammTest
   {
     [Test]
-    public void TestArray()
+    public void TestCreateHistogramm()
     {
-      Image image = new Image(256, 256);
+      var max = byte.MaxValue + 1;
+      Image image = new Image(max, max);
       image.Initialize(0);
       var access = image.Planes[0].GetLinearAccess<byte>();
-      access[42, 17] = 1;
-  
-      //int[] colorValues = CreateAllColorValues();
-      //for (int x = 0; x < image.Width; x++)
-      //{
-      //  for (int y = 0; y < image.Height; y++)
-      //  {
-      //    access[x, y] = (byte)y;
-      //  }
-      //}
-      var histogram = HistogrammViewModel.CreateHistogram(image);
+
+      for (int x = 0; x < image.Width; x++)
+      {
+        for (int y = 0; y < image.Height; y++)
+        {
+          access[x, y] = (byte)y;
+        }
+      }
+
+      foreach (int colorValue in Histogram.Create(image)[0])
+        Assert.That(colorValue, Is.EqualTo(max));
+
+      HistogrammControl histogramm = new HistogrammControl();
+      
     }
 
-    private byte[] CreateAllColorValues()
-    {
-      byte[] imageData = new byte[256];
-      for (byte i = 0; i < imageData.Length; i++)
-      {
-        imageData[i] = i;
-      }
-      return imageData;
-    }
+  
   }
 }
