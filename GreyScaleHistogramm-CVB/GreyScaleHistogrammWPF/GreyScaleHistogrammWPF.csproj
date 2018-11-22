@@ -61,6 +61,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DelegateAction.cs" />
+    <Compile Include="ViewModelBase.cs" />
     <Page Include="HistogrammView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
