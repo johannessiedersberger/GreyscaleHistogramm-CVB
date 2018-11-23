@@ -156,9 +156,12 @@ namespace GreyScaleHistogrammWPF
 
     private void UpdateGeometries(int[][] data, Size size)
     {
+      var commonMax = data.Select(histogram => histogram.Max())
+                          .Max();
+
       if (data != null)
       {
-        _streamGeometries = data.Select(plane => CreateGeometry(plane, size))
+        _streamGeometries = data.Select(plane => CreateGeometry(plane, commonMax, size))
                                 .ToArray();
       }
       else
@@ -167,7 +170,7 @@ namespace GreyScaleHistogrammWPF
       }
     }
 
-    private StreamGeometry CreateGeometry(int[] histogramData, Size maxSize)
+    private StreamGeometry CreateGeometry(int[] histogramData, int maxValue, Size maxSize)
     {
       StreamGeometry geometry = new StreamGeometry();
       geometry.FillRule = FillRule.Nonzero;
@@ -177,7 +180,7 @@ namespace GreyScaleHistogrammWPF
         context.BeginFigure(new Point(0, maxSize.Height), isFilled: true, isClosed: false);
 
         double xMultiplier = maxSize.Width / histogramData.Length;
-        double yMultiplier = (maxSize.Height / histogramData.Max());
+        double yMultiplier = maxSize.Height / maxValue;
 
         for (int i = 0; i < histogramData.Length; i++)
         {

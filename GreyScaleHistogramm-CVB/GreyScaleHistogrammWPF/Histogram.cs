@@ -21,26 +21,47 @@ namespace GreyScaleHistogrammWPF
       Debug.Assert(image != null);
       Debug.Assert(image.Planes[0].DataType == DataTypes.Int8BppUnsigned);
 
-      var histograms = new int[image.Planes.Count][];
+      return image.Planes
+                  .Select(plane => plane.ToHistogram())
+                  .ToArray();
+    }
+  }
+  
+  static class HistogramHelper
+  {
+    public static unsafe int[] ToHistogram(this ImagePlane plane)
+    {
+      var histogram = new int[byte.MaxValue + 1];
 
-      for (int i = 0; i < image.Planes.Count; i++)
+      var size = plane.Parent.Size;
+      var access = plane.GetLinearAccess();
+
+      var xInc = access.XInc.ToInt64();
+      var yInc = access.YInc.ToInt64();
+      var pBase = (byte*)access.BasePtr;
+      
+      for (int y = 0; y < size.Height; y++)
       {
-        var histogram = new int[byte.MaxValue + 1];
-
-        var access = image.Planes[i].GetLinearAccess<byte>();
-        var size = image.Size;
-
-        for (int y = 0; y < size.Height; y++)
+        for (int x = 0; x < size.Width; x++)
         {
-          for (int x = 0; x < size.Width; x++)
-          {
-            var pixelValue = access[x, y];
-            ++histogram[pixelValue];
-          }
+          var pPixel = pBase + y * yInc + x * xInc;
+          ++histogram[*pPixel];
         }
-        histograms[i] = (histogram);
       }
-      return histograms;
+
+      return histogram;
+    }
+
+    public static unsafe int[] ToHistogram(this IEnumerable<IntPtr> pixels)
+    {
+      var histogram = new int[byte.MaxValue + 1];
+
+      foreach (var pixel in pixels)
+      {
+        ++histogram[*(byte*)pixel];
+      }
+
+      return histogram;
     }
   }
 }

@@ -29,13 +29,13 @@
 
     <local:HistogrammControl Grid.Row="1" Grid.Column="1" 
                              BorderBrush="Black" BorderThickness="1" Background="#0FFFFFFF"
-                             Margin="20" 
+                             Margin="20,0,20,60" 
                              Data="{Binding Data}"  />
 
     <Border Grid.Row="1" Grid.Column="0"  
-            VerticalAlignment="Center" HorizontalAlignment="Left" Padding="10,5"
-            Background="#F0FFFFFF" BorderBrush="White" BorderThickness="1">
-      <StackPanel Orientation="Horizontal">
+            VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="10,0" Margin="20,0,20,60"
+            Background="#8FFFFFFF" BorderBrush="White" BorderThickness="2">
+      <StackPanel Orientation="Horizontal" Background="Transparent">
         <Label Content="Processing Time:" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20"/>
         <Label Content="{Binding Time}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20"/>
         <Button Content="Calculate" Command="{Binding Calculate}" MinWidth="75" VerticalAlignment="Center" Grid.Column="2" />
