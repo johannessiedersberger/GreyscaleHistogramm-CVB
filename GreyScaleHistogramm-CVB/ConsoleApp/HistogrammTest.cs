@@ -11,29 +11,40 @@ namespace ConsoleApp
 {
   public class HistogrammTest
   {
+    private const int MaxCount = byte.MaxValue + 1;
+
+    /// <summary>
+    /// Checks if the Histogramm is created correctly
+    /// </summary>
     [Test]
     public void TestCreateHistogramm()
     {
-      var max = byte.MaxValue + 1;
-      Image image = new Image(max, max);
-      image.Initialize(0);
+      // given
+      using (var image = CreateRampImage())
+      {
+        // when
+        var histogram = Histogram.Create(image)[0];
+
+        // then
+        Assert.That(histogram, Is.EquivalentTo(Enumerable.Repeat(MaxCount, 256)));
+      }
+    }
+
+    private static Image CreateRampImage()
+    {
+      var image = new Image(MaxCount, MaxCount);
       var access = image.Planes[0].GetLinearAccess<byte>();
 
-      for (int x = 0; x < image.Width; x++)
+      var size = image.Size;
+      for (int y = 0; y < size.Height; y++)
       {
-        for (int y = 0; y < image.Height; y++)
+        for (int x = 0; x < size.Width; x++)
         {
           access[x, y] = (byte)y;
         }
       }
 
-      foreach (int colorValue in Histogram.Create(image)[0])
-        Assert.That(colorValue, Is.EqualTo(max));
-
-      HistogrammControl histogramm = new HistogrammControl();
-      
+      return image;
     }
-
-  
   }
 }

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GreyScaleHistogrammWPF"
+        xmlns:cvb="http://www.commonvisionblox.com/wpf"
         xmlns:MyNamespace="clr-namespace:GreyScaleHistogrammWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -15,33 +16,31 @@
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition/>
-      <RowDefinition/>
+      <RowDefinition Height="200"/>
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="300" />
+    </Grid.ColumnDefinitions>
 
-    <Grid>
-     
-    </Grid>
-    
-    <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
-        <ColumnDefinition/>
-      </Grid.ColumnDefinitions>
+    <cvb:Display Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                 Image="{Binding Image}" />
 
-      <local:HistogrammControl Data="{Binding Data}" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Margin="20" />
 
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="0.5*"/>
-          <ColumnDefinition Width="0.3*"/>
-          <ColumnDefinition Width="0.2*"/>
-        </Grid.ColumnDefinitions>
+    <local:HistogrammControl Grid.Row="1" Grid.Column="1" 
+                             BorderBrush="Black" BorderThickness="1" Background="#0FFFFFFF"
+                             Margin="20" 
+                             Data="{Binding Data}"  />
+
+    <Border Grid.Row="1" Grid.Column="0"  
+            VerticalAlignment="Center" HorizontalAlignment="Left" Padding="10,5"
+            Background="#F0FFFFFF" BorderBrush="White" BorderThickness="1">
+      <StackPanel Orientation="Horizontal">
         <Label Content="Processing Time:" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20"/>
         <Label Content="{Binding Time}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20"/>
-        <Button Content="Calculate" Command="{Binding Calculate}" Width="60" Height="30" Grid.Column="2" HorizontalAlignment="Left"/>
-      </Grid>
-
-    </Grid>
+        <Button Content="Calculate" Command="{Binding Calculate}" MinWidth="75" VerticalAlignment="Center" Grid.Column="2" />
+      </StackPanel>
+    </Border>
 
   </Grid>
 

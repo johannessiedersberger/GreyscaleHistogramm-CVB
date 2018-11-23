@@ -21,21 +21,35 @@ namespace GreyScaleHistogrammWPF
     /// </summary>
     public MainViewModel()
     {
-      CalculateHistogramm();
       Calculate = new DelegateAction(CalculateHistogramm);
+
+      Image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg");
+      CalculateHistogramm();
     }
 
     private void CalculateHistogramm()
     {
-      using (var image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg"))
+      var elapsedTime = Measure(() =>
       {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        Data = Histogram.Create(image);
-        stopwatch.Stop();
-        Time = stopwatch.ElapsedMilliseconds.ToString() + "ms";
-      }
+        Data = Histogram.Create(Image);
+      });
+
+      Time = $"{elapsedTime.TotalMilliseconds}ms";
     }
+
+    private static TimeSpan Measure(Action action)
+    {
+      Stopwatch stopwatch = new Stopwatch();
+      stopwatch.Start();
+      action();
+      stopwatch.Stop();
+      return TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds);
+    }
+
+    /// <summary>
+    /// The image to display.
+    /// </summary>
+    public Image Image { get; private set; }
 
     /// <summary>
     /// Contains how often a color value appeard in the image
