@@ -15,7 +15,7 @@ namespace GreyScaleHistogrammWPF
     {
       _action = action ?? throw new ArgumentNullException(nameof(action));
     }
-
+   
     #region CanExecute
 
 #   pragma warning disable 67 // interface implementation

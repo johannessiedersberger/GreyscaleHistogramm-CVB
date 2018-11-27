@@ -23,6 +23,7 @@ namespace GreyScaleHistogrammWPF
 
       return image.Planes
                   .Select(plane => plane.ToHistogram())
+                  //.Select(plane => plane.AllPixels.ToHistogram())
                   .ToArray();
     }
   }
@@ -44,11 +45,10 @@ namespace GreyScaleHistogrammWPF
       {
         for (int x = 0; x < size.Width; x++)
         {
-          var pPixel = pBase + y * yInc + x * xInc;
+          var pPixel = pBase + x * xInc + y * yInc;
           ++histogram[*pPixel];
         }
       }
-
       return histogram;
     }
 

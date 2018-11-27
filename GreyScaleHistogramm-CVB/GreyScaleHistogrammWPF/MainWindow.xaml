@@ -30,7 +30,7 @@
     <local:HistogrammControl Grid.Row="1" Grid.Column="1" 
                              BorderBrush="Black" BorderThickness="1" Background="#0FFFFFFF"
                              Margin="20,0,20,60" 
-                             Data="{Binding Data}"  />
+                             Data="{Binding Data}"/>
 
     <Border Grid.Row="1" Grid.Column="0"  
             VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="10,0" Margin="20,0,20,60"
@@ -41,6 +41,15 @@
         <Button Content="Calculate" Command="{Binding Calculate}" MinWidth="75" VerticalAlignment="Center" Grid.Column="2" />
       </StackPanel>
     </Border>
+
+    <StackPanel Grid.Row="1" 
+            Orientation="Vertical" Margin="0,4,0,0">
+      <Button x:Name="openButton" Content="Open..." 
+          MinWidth="75" Margin="0, 0, 4, 0" Command="{Binding OpenButton}" />
+      <CheckBox x:Name="grabCheckBox" Content="Grab"
+            VerticalAlignment="Center" IsChecked="{Binding GrabCheckBox}" Command="{Binding GrabCheckBoxCommand}" />
+    </StackPanel>
+
 
   </Grid>
 
