@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GreyScaleHistogrammWPF
+namespace RGBHistogrammWPF
 {
   /// <summary>
   /// Control for the Histogramm of a MonoPlane or Multiplane Image
@@ -254,6 +254,5 @@ namespace GreyScaleHistogrammWPF
     }
    
     private StreamGeometry[] _streamGeometries;
-  
   }
 }

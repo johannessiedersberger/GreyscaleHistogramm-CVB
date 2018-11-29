@@ -120,9 +120,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GreyScaleHistogrammWPF\GreyScaleHistogrammWPF.csproj">
+    <ProjectReference Include="..\GreyScaleHistogrammWPF\RGBHistogrammWPF.csproj">
       <Project>{dc3afde4-b905-4d15-b22d-f3fc783126fa}</Project>
-      <Name>GreyScaleHistogrammWPF</Name>
+      <Name>RGBHistogrammWPF</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

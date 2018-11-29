@@ -12,8 +12,9 @@ using Stemmer.Cvb.Wpf;
 using System.Windows;
 using System.IO;
 using Stemmer.Cvb.Async;
+using Stemmer.Cvb.Utilities;
 
-namespace GreyScaleHistogrammWPF
+namespace RGBHistogrammWPF
 {
   /// <summary>
   /// The MainWindow of the Application
@@ -30,10 +31,11 @@ namespace GreyScaleHistogrammWPF
       OpenButton = new DelegateAction(OpenButtonClicked);
       GrabCheckBoxCommand = new DelegateAction(CheckBoxCheckedChange);
 
-
-      Image = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg"); //Default Image
+      Image img = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Camera Roll\001.jpg"); //Default Image
+      Image = PixelAverage.Calculate(img);
       CalculateHistogramm();
     }
+
 
     public ICommand Calculate { get; set; }
 
@@ -153,9 +155,8 @@ namespace GreyScaleHistogrammWPF
           {
             StreamImage image = await Device.Stream.WaitAsync();
 
-            //Image = image;
+            //Image = image;           
             CalculateHistogramm();
-
           }
         }
         catch (OperationCanceledException)

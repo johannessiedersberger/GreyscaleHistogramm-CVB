@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using GreyScaleHistogrammWPF;
+using RGBHistogrammWPF;
 using Stemmer.Cvb;
 
 namespace ConsoleApp
