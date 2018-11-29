@@ -32,7 +32,8 @@ namespace RGBHistogrammWPF
       GrabCheckBoxCommand = new DelegateAction(CheckBoxCheckedChange);
 
       Image img = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Camera Roll\001.jpg"); //Default Image
-      Image = PixelAverage.Calculate(img);
+      
+      Image = PixelAverage.Calculate(img, fieldSize: 20);
       CalculateHistogramm();
     }
 

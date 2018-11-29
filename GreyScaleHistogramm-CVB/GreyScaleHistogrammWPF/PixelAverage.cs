@@ -10,9 +10,9 @@ namespace RGBHistogrammWPF
 {
   public static class PixelAverage
   {
-    public static Image Calculate(Image image)
+    public static Image Calculate(Image image, int fieldSize)
     {
-      return CreateImage(CalculateAverage(image.Planes[0]));
+      return CreateImage(CalculateAverage(image.Planes[0], fieldSize));
     }
 
     private static Image CreateImage(int[,] imageValues)
@@ -31,7 +31,7 @@ namespace RGBHistogrammWPF
       return image;
     }
 
-    private static int[,] CalculateAverage(ImagePlane plane)
+    private static int[,] CalculateAverage(ImagePlane plane, int fieldSize)
     {
       var size = plane.Parent.Size;
       int[,] imageValues = new int[size.Width, size.Height];
@@ -40,25 +40,27 @@ namespace RGBHistogrammWPF
       {
         for (int x = 0; x < size.Width; x++)
         {
-          imageValues[x,y] = PixelsInNeighborhod(plane, x, y);
+          imageValues[x,y] = PixelsInNeighborhod(plane, x, y, fieldSize);
         }
       }
       return imageValues;
     }
 
-    private static int PixelsInNeighborhod(ImagePlane plane, int x, int y)
+    private static int PixelsInNeighborhod(ImagePlane plane, int x, int y, int fieldSize)
     {
       int pixelValueSum = 0;
       int numberOfPixels = 0;
 
-      for (int kernelY = y-1; kernelY <= y+1; kernelY++)
+      fieldSize /= 2;
+
+      for (int kernelY = y-fieldSize; kernelY <= y+fieldSize; kernelY++)
       {
-        for (int kernelX = x-1; kernelX <= x+1; kernelX++)
+        for (int kernelX = x-fieldSize; kernelX <= x+fieldSize; kernelX++)
         {
-          if(IsInsideImage(plane, x, y))
+          if(IsInsideImage(plane, kernelX, kernelY))
           {
             numberOfPixels++;
-            pixelValueSum += GetPixelValue(plane, x, y);
+            pixelValueSum += GetPixelValue(plane, kernelX, kernelY);
           }
         }
       }
@@ -69,11 +71,10 @@ namespace RGBHistogrammWPF
     private static bool IsInsideImage(ImagePlane plane, int x, int y)
     {
       var size = plane.Parent.Size;
-      return 
-        IsInArea(x, 0, size.Width) && IsInArea(y, 0, size.Height);
+      return IsInRange(x, 0, size.Width) && IsInRange(y, 0, size.Height);
     }
 
-    private static bool IsInArea(int test, int min, int max)
+    private static bool IsInRange(int test, int min, int max)
     {
       return test >= min && test < max;
     }
