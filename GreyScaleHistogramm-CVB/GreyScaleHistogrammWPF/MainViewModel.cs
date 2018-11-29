@@ -33,7 +33,7 @@ namespace RGBHistogrammWPF
 
       Image img = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Camera Roll\001.jpg"); //Default Image
       
-      Image = PixelAverage.Calculate(img, fieldSize: 20);
+      Image = PixelAverage.Calculate(img, fieldSize: 5);
       CalculateHistogramm();
     }
 
