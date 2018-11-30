@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="DelegateAction.cs" />
     <Compile Include="PixelAverage.cs" />
+    <Compile Include="PixelKernel.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -12,7 +12,7 @@ namespace RGBHistogrammWPF
   public unsafe class PixelHelper
   {
     public Size2D Size;
-    public LinearAccessData Access;
+    public LinearAccessData<byte> Access;
     public long XInc;
     public long YInc;
     public byte* PBase;
@@ -20,7 +20,7 @@ namespace RGBHistogrammWPF
     public unsafe PixelHelper(ImagePlane plane)
     {
       Size = plane.Parent.Size;
-      Access = plane.GetLinearAccess();
+      Access = plane.GetLinearAccess<byte>();
 
       XInc = Access.XInc.ToInt64();
       YInc = Access.YInc.ToInt64();

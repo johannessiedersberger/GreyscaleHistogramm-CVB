@@ -47,31 +47,6 @@ namespace ConsoleApp
       return image;
     }
 
-    [Test]
-    public unsafe void TestPixelAverage()
-    {
-      //given
-      using(var oldImage = CreateRampImage())
-      {
-        //when
-        var newImage = PixelAverage.Calculate(oldImage, 1);
-
-        //old image
-        var oldSize = oldImage.Planes[0].Parent.Size;
-        var oldaccess = oldImage.Planes[0].GetLinearAccess();
-
-        var oldXInc = oldaccess.XInc.ToInt64();
-        var oldYInc = oldaccess.YInc.ToInt64();
-        var oldpBase = (byte*)oldaccess.BasePtr;
-
-        //new image
-        var newSize = newImage.Planes[0].Parent.Size;
-        var newAccess = newImage.Planes[0].GetLinearAccess();
-
-        var newXInc = newAccess.XInc.ToInt64();
-        var newYInc = newAccess.YInc.ToInt64();
-        var newPBase = (byte*)newAccess.BasePtr;
-      }
-    }
+    
   }
 }
