@@ -43,15 +43,21 @@ namespace RGBHistogrammWPF
 
       for (int kernelY = y - 1; kernelY < y + 1; kernelY++)
       {
+        int yArray = 0;
+
         var ypart = kernelY * pixelHelper.YInc + pixelHelper.PBase;
         for (int kernelX = x - 1; kernelX < x + 1; kernelX++)
         {
+          int xArray = 0;
+
           if (IsInsideImage(pixelHelper.Size, kernelX, kernelY))
           {
             var pixelValue = *(kernelX * pixelHelper.XInc + ypart);
-            valueSum += pixelValue * kernel[kernelX - x, kernelY - y];
+            valueSum += pixelValue * kernel[xArray,yArray];
           }
+          xArray++;
         }
+        yArray++;
       }
       return valueSum / kernel.Length;
     }
