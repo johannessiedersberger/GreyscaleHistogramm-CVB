@@ -31,7 +31,10 @@ namespace RGBHistogrammWPF
       OpenButton = new DelegateAction(OpenButtonClicked);
       GrabCheckBoxCommand = new DelegateAction(CheckBoxCheckedChange);
 
-      Image img = Image.FromFile(@"C:\Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg"); //Default Image
+      string carImage = @"C: \Users\jsiedersberger\Pictures\Saved Pictures\lamborghini.jpg";
+      string classicSwitch = @"C: \Users\jsiedersberger\Pictures\Camera Roll\001.jpg";
+
+      Image img = Image.FromFile(classicSwitch); //Default Image
       
       Image = PixelKernel.Calculate(img);
       CalculateHistogramm();
@@ -146,6 +149,9 @@ namespace RGBHistogrammWPF
 
     private async void CheckBoxCheckedChange()
     {
+      if (Device == null)
+        return;
+
       if (GrabCheckBox)
       {
         Device.Stream.Start();
@@ -156,7 +162,7 @@ namespace RGBHistogrammWPF
           {
             StreamImage image = await Device.Stream.WaitAsync();
 
-            //Image = image;           
+            //Image = PixelKernel.Calculate(image);           
             CalculateHistogramm();
           }
         }
@@ -184,7 +190,6 @@ namespace RGBHistogrammWPF
         if (!ReferenceEquals(value, _device))
         {
           Image = value?.DeviceImage;
-
           _device?.Dispose(); // old one is not needed anymore
           _device = value;
         }
