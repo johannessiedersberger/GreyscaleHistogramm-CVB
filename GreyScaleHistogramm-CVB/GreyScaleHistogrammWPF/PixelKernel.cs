@@ -11,17 +11,25 @@ namespace RGBHistogrammWPF
   {
     public static Image Calculate(Image image)
     {
-      return CreateNewImage(CreateNewImage(image, new int[3, 3]
+      return CreateNewImage(image, new int[5, 5]
       {
-        {-1,-1,-1},
-        {0, 0, 0},
-        {1, 1, 1},
-      }), new int[3, 3]{
-         {-1,-1,-1},
-        {0, 0, 0},
-        {1, 1, 1},
-       
+        {-1, -2, 0, 2, 1 },
+        {-1, -2, 0, 2, 1 },
+        {-1, -2, 0, 2, 1 },
+        {-1, -2, 0, 2, 1 },
+        {-1, -2, 0, 2, 1 },
       });
+      //return CreateNewImage(CreateNewImage(image, new int[3, 3]
+      //{
+      //  {-1,-1,-1},
+      //  {0, 0, 0},
+      //  {1, 1, 1},
+      //}), new int[3, 3]{
+      //   {-1,-1,-1},
+      //  {0, 0, 0},
+      //  {1, 1, 1},
+
+      //});
     }
 
     private static Image CreateNewImage(Image image, int[,] kernel)
@@ -46,21 +54,22 @@ namespace RGBHistogrammWPF
     {
       int valueSum = 0;
 
-      int yArray = 0;
-      for (int kernelY = y - 1; kernelY <= y + 1; kernelY++)
+      int firstDimension = 0;
+      int pixelsAround = (kernel.GetLength(0) - 1) / 2;
+      for (int kernelY = y - pixelsAround; kernelY <= y + pixelsAround; kernelY++)
       {
         var ypart = kernelY * pixelHelper.YInc + pixelHelper.PBase;
-        int xArray = 0;
-        for (int kernelX = x - 1; kernelX <= x + 1; kernelX++)
+        int secondDimension = 0;
+        for (int kernelX = x - pixelsAround; kernelX <= x + pixelsAround; kernelX++)
         {
           if (IsInsideImage(pixelHelper.Size, kernelX, kernelY))
           {
             var pixelValue = *(kernelX * pixelHelper.XInc + ypart);
-            valueSum += pixelValue * kernel[yArray,xArray];
+            valueSum += pixelValue * kernel[firstDimension, secondDimension];
           }
-          xArray++;
+          secondDimension++;
         }
-        yArray++;
+        firstDimension++;
       }
       return valueSum / kernel.Length;
     }
